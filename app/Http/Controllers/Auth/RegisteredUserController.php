@@ -38,6 +38,12 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Note: This is already validated but this will strongly infer
+        // the type for static analysis purposes
+        if (!is_string($request->password)) {
+            abort(422, 'Password must be a string');
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
