@@ -17,5 +17,10 @@ class ProductSeeder extends Seeder
             'name' => SystemProduct::GoldCoffee->value,
             'percent_profit_margin' => 25,
         ]);
+
+        Product::factory()->create([
+            'name' => SystemProduct::ArabicCoffee->value,
+            'percent_profit_margin' => 15,
+        ]);
     }
 }

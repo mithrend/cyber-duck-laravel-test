@@ -57,9 +57,13 @@ class CalculateSellingPriceTest extends TestCase
     public static function provideCalculateSellingPrice(): array
     {
         return [
-            [1, 1000, SystemProduct::GoldCoffee->value, 2334],
-            [2, 2050, SystemProduct::GoldCoffee->value, 6467],
-            [5, 1200, SystemProduct::GoldCoffee->value, 9000],
+            [1, 1000, SystemProduct::GoldCoffee->value, 25, 2334],
+            [2, 2050, SystemProduct::GoldCoffee->value, 25, 6467],
+            [5, 1200, SystemProduct::GoldCoffee->value, 25, 9000],
+            [1, 1000, SystemProduct::ArabicCoffee->value, 15, 2177],
+            [2, 2050, SystemProduct::ArabicCoffee->value, 15, 5824],
+            [5, 1200, SystemProduct::ArabicCoffee->value, 15, 8059],
+
         ];
     }
 
@@ -67,7 +71,7 @@ class CalculateSellingPriceTest extends TestCase
      * @test
      * @dataProvider provideCalculateSellingPrice
      */
-    public function can_calculate_selling_price(int $quantity, int $unitCost, string $productName, int $expectedSellingPrice): void
+    public function can_calculate_selling_price(int $quantity, int $unitCost, string $productName, int $percentProfitMargin, int $expectedSellingPrice): void
     {
         $saleService = new SaleService();
 
@@ -80,7 +84,7 @@ class CalculateSellingPriceTest extends TestCase
             ->andReturn($builderMock);
 
         $product = new Product();
-        $product->percent_profit_margin = 25;
+        $product->percent_profit_margin = $percentProfitMargin;
 
         $builderMock->shouldReceive('firstOrFail')
             ->once()

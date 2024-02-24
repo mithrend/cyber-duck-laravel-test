@@ -34,32 +34,45 @@ class ShowSalesTest extends TestCase
     /** @test */
     public function displays_sales(): void
     {
-        $product = Product::factory()->create([
-            'name' => 'Test Coffee',
+        $productOne = Product::factory()->create([
+            'name' => 'Test Coffee One',
             'percent_profit_margin' => 10,
         ]);
 
-        Sale::factory()->create([
+        $productTwo = Product::factory()->create([
+            'name' => 'Test Coffee Two',
+            'percent_profit_margin' => 15,
+        ]);
+
+        $this->travel(-1)->days();
+
+        $saleOne = Sale::factory()->create([
             'quantity' => 1,
             'unit_cost' => 100,
             'selling_price' => 1009,
-            'product_id' => $product->id,
+            'product_id' => $productOne->id,
         ]);
 
-        Sale::factory()->create([
+        $this->travelBack();
+
+        $saleTwo = Sale::factory()->create([
             'quantity' => 3,
             'unit_cost' => 1234,
             'selling_price' => 5678,
-            'product_id' => $product->id,
+            'product_id' => $productTwo->id,
         ]);
 
         Livewire::test(ShowSales::class)
+            ->assertSee('Test Coffee One')
             ->assertSee('1')
             ->assertSee('£1.00')
             ->assertSee('£10.09')
+            ->assertSee($saleOne->created_at->format('Y-m-d H:i:s'))
+            ->assertSee('Test Coffee Two')
             ->assertSee('3')
             ->assertSee('£12.34')
-            ->assertSee('£56.78');
+            ->assertSee('£56.78')
+            ->assertSee($saleTwo->created_at->format('Y-m-d H:i:s'));
     }
 
     /** @test */

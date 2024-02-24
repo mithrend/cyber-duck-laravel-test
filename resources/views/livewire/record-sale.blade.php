@@ -1,5 +1,13 @@
 <form wire:submit="save" class="flex gap-4">
     <div class="flex-auto flex flex-col w-1/4">
+        <label for="productName" class="mb-2 font-medium text-gray-900">Quantity</label>
+        <select id="productName" type="number" wire:model.blur="productName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+            @foreach ($this->productNames() as $productName)
+            <option value="{{ $productName }}">{{ $productName }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="flex-auto flex flex-col w-1/4">
         <label for="quantity" class="mb-2 font-medium text-gray-900">Quantity</label>
         <input id="quantity" type="number" wire:model.blur="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
         <div>

@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Livewire;
 
+use App\Enum\SystemProduct;
 use App\Livewire\RecordSale;
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
 use Database\Seeders\ProductSeeder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -37,12 +40,20 @@ class RecordSaleTest extends TestCase
         $this->seed(ProductSeeder::class);
         $this->assertEquals(0, Sale::count());
 
+        $arabicCoffee = Product::where('name', SystemProduct::ArabicCoffee->value)->first();
+
         Livewire::test(RecordSale::class)
             ->set('quantity', 1)
             ->set('unitCost', '10.00')
+            ->set('productName', $arabicCoffee->name)
             ->call('save');
 
         $this->assertEquals(1, Sale::count());
+
+        $sale = Sale::first();
+        $this->assertEquals($arabicCoffee->id, $sale->product_id);
+        $this->assertEquals(1, $sale->quantity);
+        $this->assertEquals(1000, $sale->unit_cost);
     }
 
     /** @test */
@@ -100,5 +111,18 @@ class RecordSaleTest extends TestCase
             ->set('unitCost', $unitCost)
             ->call('save')
             ->assertHasErrors(['unitCost' => $rule]);
+    }
+
+    /** @test */
+    public function can_not_create_a_sale_with_an_invalid_product_name(): void
+    {
+        $this->seed(ProductSeeder::class);
+
+        $this->expectException(ModelNotFoundException::class);
+        Livewire::test(RecordSale::class)
+            ->set('quantity', 1)
+            ->set('unitCost', '10.00')
+            ->set('productName', 'invalid_product_name')
+            ->call('save');
     }
 }
