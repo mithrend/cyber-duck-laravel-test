@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -17,6 +19,10 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Sales Agent',
             'email' => 'sales@coffee.shop',
+        ]);
+
+        $this->call([
+            ProductSeeder::class,
         ]);
     }
 }
