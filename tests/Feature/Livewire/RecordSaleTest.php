@@ -45,6 +45,20 @@ class RecordSaleTest extends TestCase
         $this->assertEquals(1, Sale::count());
     }
 
+    /** @test */
+    public function creating_sale_dispatches_sales_updated_event(): void
+    {
+
+        $this->seed(ProductSeeder::class);
+        $this->assertEquals(0, Sale::count());
+
+        Livewire::test(RecordSale::class)
+            ->set('quantity', 1)
+            ->set('unitCost', '10.00')
+            ->call('save')
+            ->assertDispatched('sales-updated');
+    }
+
     public static function quantityIsInvalid(): array
     {
         return [

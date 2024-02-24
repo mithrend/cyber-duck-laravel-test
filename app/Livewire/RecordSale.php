@@ -38,6 +38,7 @@ class RecordSale extends Component
         $this->saleService->createSale($quantity, $intUnitCost, SystemProduct::GoldCoffee->value);
 
         $this->reset();
+        $this->dispatch('sales-updated');
     }
 
     /**

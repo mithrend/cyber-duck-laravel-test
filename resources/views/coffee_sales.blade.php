@@ -12,6 +12,14 @@
                     <livewire:record-sale />
                 </div>
             </div>
+            <h2 class="mt-8 px-3 font-semibold text-xl text-gray-800 leading-tight">
+                Previous Sales
+            </h2>
+            <div class="mt-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="bg-white border-b border-gray-200">
+                    <livewire:show-sales />
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>
